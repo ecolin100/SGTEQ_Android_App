@@ -98,5 +98,6 @@ class CItaVerificacion : AppCompatActivity() {
         finish()
     }
 
+    //Funcion para que un elemento se haga de tipo Editable
     fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
 }
