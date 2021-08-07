@@ -15,6 +15,7 @@ import com.android.volley.toolbox.Volley
 
 class CItaVerificacion : AppCompatActivity() {
 
+    //Declarar e inicializacón de variables
     var idCoche = ""
     var nombre = ""
     var apaterno = ""
