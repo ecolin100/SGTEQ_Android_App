@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">ProyectoFinal</string>
+
+    <string-array name="tramites">
+        <item>Verificación Vehicular</item>
+        <item>Solicitud de Licencia</item>
+        <item>Renovación de Licencia</item>
+        <item>Alta de Vehículo</item>
+        <item>Baja de Vehículo</item>
+    </string-array>
+
+    <string-array name="lugares">
+        <item>Av. de la Luz Número 212</item>
+        <item>Hacienda San Miguel Número 21</item>
+        <item>Av. Bernardo Quintana Número 162</item>
+        <item>Lomas del Pedregal Número 12</item>
+    </string-array>
+</resources>
