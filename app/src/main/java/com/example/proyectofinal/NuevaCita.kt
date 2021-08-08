@@ -16,6 +16,7 @@ import java.util.*
 
 class NuevaCita : AppCompatActivity(), TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener{
 
+    var servidor = ""
     var hora = 0
     var minuto = 0
     var dia = 0
@@ -42,6 +43,7 @@ class NuevaCita : AppCompatActivity(), TimePickerDialog.OnTimeSetListener, DateP
 
         //Recibiendo id de la cuenta de la persona
         val objetoIntent: Intent = intent
+        servidor = objetoIntent.getStringExtra("servidor").toString()
         id = objetoIntent.getStringExtra("id").toString()
 
         //Inicialización de componentes
@@ -159,7 +161,7 @@ class NuevaCita : AppCompatActivity(), TimePickerDialog.OnTimeSetListener, DateP
 
     fun clickCrearCita(view: View){
         if (verificarVacio()){
-            val url = "http://192.168.100.6:8888/API_SGTEQ/insertar_cita.php"
+            val url = "$servidor/API_SGTEQ/insertar_cita.php"
             val queue = Volley.newRequestQueue(this)
             var resultadoPost = object : StringRequest(Request.Method.POST, url,
                 Response.Listener <String> { response ->

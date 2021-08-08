@@ -1,5 +1,6 @@
 package com.example.proyectofinal
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -12,9 +13,15 @@ import org.json.JSONException
 
 class MisCitas : AppCompatActivity() {
 
+    var servidor = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mis_citas)
+
+        //Setear servidor
+        val objetoIntent: Intent = intent
+        servidor = objetoIntent.getStringExtra("servidor").toString()
 
         consultar()
 
@@ -30,7 +37,7 @@ class MisCitas : AppCompatActivity() {
         val dates = mutableListOf<Citas>()
 
         var queue= Volley.newRequestQueue(this.applicationContext)
-        val url = "http://192.168.100.6:8888/API_SGTEQ/consultar_citas.php"
+        val url = "$servidor/API_SGTEQ/consultar_citas.php"
 
         var jsonObjectRequest= JsonObjectRequest(
             Request.Method.GET,url,null,

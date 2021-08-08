@@ -10,6 +10,7 @@ import org.w3c.dom.Text
 
 class MenuUsuario : AppCompatActivity() {
 
+    var servidor = ""
     var id = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,12 +26,14 @@ class MenuUsuario : AppCompatActivity() {
         //Poner nombre
         val objetoIntent: Intent = intent
         val nombre = objetoIntent.getStringExtra("nombre")
+        servidor = objetoIntent.getStringExtra("servidor").toString()
         id = objetoIntent.getStringExtra("id").toString()
         tvSaludo.text = "¡Bienvenido $nombre!"
 
         //Click en Mis Citas
         btMC.setOnClickListener(){
             intent = Intent(this, MisCitas::class.java)
+            intent.putExtra("servidor", servidor)
             intent.putExtra("id", id)
             startActivity(intent)
         }
@@ -38,6 +41,7 @@ class MenuUsuario : AppCompatActivity() {
         //Click en Nueva Cita
         btNC.setOnClickListener(){
             intent = Intent(this, NuevaCita::class.java)
+            intent.putExtra("servidor", servidor)
             intent.putExtra("id", id)
             startActivity(intent)
         }

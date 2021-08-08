@@ -16,6 +16,12 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 
 class MainActivity : AppCompatActivity() {
 
+    /* En la variable "servidor" sustituir la dirección ip de su servidor
+    Por ejemplo: http://192.168.100.6:8888
+    En caso de que se use el puerto 80 para la conexión al servidor Apache se puede omitir el mismo
+    Por ejemplo: http://192.168.100.6 */
+    var servidor = "http://192.168.100.6:8888"
+
     var id = ""
     var name = ""
     var lname1 = ""
@@ -54,7 +60,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Rellene todos los campos", Toast.LENGTH_LONG).show()
         else{
             val queue = Volley.newRequestQueue(this)
-            val url = "http://192.168.100.6:8888/API_SGTEQ/consultar.php?correo=$correo&contrasenia=$contrasena"
+            val url = "$servidor/API_SGTEQ/consultar.php?correo=$correo&contrasenia=$contrasena"
 
             val jsonObjectRequest = JsonObjectRequest(
                 Request.Method.GET, url, null,
@@ -69,11 +75,13 @@ class MainActivity : AppCompatActivity() {
 
                     if (rol == "0" ){
                         intent = Intent(this, MenuUsuario::class.java)
+                        intent.putExtra("servidor", servidor)
                         intent.putExtra("id", id)
                         intent.putExtra("nombre", name)
                         startActivity(intent)
                     } else if (rol == "1"){
                         intent = Intent(this, MenuAdministrador::class.java)
+                        intent.putExtra("servidor", servidor)
                         intent.putExtra("id", id)
                         intent.putExtra("nombre", name)
                         intent.putExtra("apellidop", lname1)

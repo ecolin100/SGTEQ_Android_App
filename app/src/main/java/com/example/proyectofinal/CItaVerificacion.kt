@@ -16,6 +16,7 @@ import com.android.volley.toolbox.Volley
 class CItaVerificacion : AppCompatActivity() {
 
     //Declarar e inicializacón de variables
+    var servidor = ""
     var idCoche = ""
     var nombre = ""
     var apaterno = ""
@@ -42,6 +43,7 @@ class CItaVerificacion : AppCompatActivity() {
 
         //Poner nombre del técnico
         val objetoIntent: Intent = intent
+        servidor = objetoIntent.getStringExtra("servidor").toString()
         nombre = objetoIntent.getStringExtra("nombre").toString()
         apaterno = objetoIntent.getStringExtra("apaterno").toString()
         amaterno = objetoIntent.getStringExtra("amaterno").toString()
@@ -57,7 +59,7 @@ class CItaVerificacion : AppCompatActivity() {
         } else {
 
             val queue = Volley.newRequestQueue(this)
-            val url = "http://192.168.100.6:8888/API_SGTEQ/consultar_serie.php?numero_serie=${etSer?.text.toString()}"
+            val url = "$servidor/API_SGTEQ/consultar_serie.php?numero_serie=${etSer?.text.toString()}"
 
             val jsonObjectRequest = JsonObjectRequest(
                 Request.Method.GET, url, null,
@@ -77,7 +79,7 @@ class CItaVerificacion : AppCompatActivity() {
     }
 
     fun hacerCita() {
-        val url = "http://192.168.100.6:8888/API_SGTEQ/insertar.php"
+        val url = "$servidor/API_SGTEQ/insertar.php"
         val queue = Volley.newRequestQueue(this)
         val resultadoPost = object : StringRequest(Request.Method.POST, url,
             Response.Listener <String> { response ->

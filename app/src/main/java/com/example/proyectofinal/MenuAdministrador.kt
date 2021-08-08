@@ -14,6 +14,7 @@ import com.android.volley.toolbox.Volley
 
 class MenuAdministrador : AppCompatActivity() {
 
+    var servidor = ""
     var id = ""
     var name = ""
     var nombre = ""
@@ -30,6 +31,7 @@ class MenuAdministrador : AppCompatActivity() {
 
         //Poner nombre
         val objetoIntent: Intent = intent
+        servidor = objetoIntent.getStringExtra("servidor").toString()
         nombre = objetoIntent.getStringExtra("nombre").toString()
         apaterno = objetoIntent.getStringExtra("apellidop").toString()
         amaterno = objetoIntent.getStringExtra("apellidom").toString()
@@ -50,7 +52,7 @@ class MenuAdministrador : AppCompatActivity() {
             Toast.makeText(this, "Rellene todos los campos", Toast.LENGTH_LONG).show()
         } else {
             val queue = Volley.newRequestQueue(this)
-            val url = "http://192.168.100.6:8888/API_SGTEQ/consultar_cita.php?id=$foliocita"
+            val url = "$servidor/API_SGTEQ/consultar_cita.php?id=$foliocita"
 
             val jsonObjectRequest = JsonObjectRequest(
                 Request.Method.GET, url, null,
@@ -60,6 +62,7 @@ class MenuAdministrador : AppCompatActivity() {
 
                     if (name == "Verificación Vehicular" ){
                         intent = Intent(this, CItaVerificacion::class.java)
+                        intent.putExtra("servidor", servidor)
                         intent.putExtra("nombre", nombre)
                         intent.putExtra("apaterno", apaterno)
                         intent.putExtra("amaterno", amaterno)
