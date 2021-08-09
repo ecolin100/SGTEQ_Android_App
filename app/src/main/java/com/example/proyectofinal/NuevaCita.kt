@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.*
 import com.android.volley.Request
 import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.w3c.dom.Text
@@ -32,6 +33,7 @@ class NuevaCita : AppCompatActivity(), TimePickerDialog.OnTimeSetListener, DateP
     var fechacons = ""
     var horacons = ""
     var id = ""
+    var idcita = ""
 
     //Declaración componentes
     var tvHose: TextView?=null
@@ -136,16 +138,22 @@ class NuevaCita : AppCompatActivity(), TimePickerDialog.OnTimeSetListener, DateP
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
         horaObtenida = hourOfDay
         minutoObtenido = minute
-        tvHose?.setText("$horaObtenida:$minutoObtenido")
 
-        //Se obtiene la hora para enviar al insert
-        horacons = "$horaObtenida:$minutoObtenido"
+        if(horaObtenida in 9..16){
+            tvHose?.setText("$horaObtenida:$minutoObtenido")
+            //Se obtiene la hora para enviar al insert
+            horacons = "$horaObtenida:$minutoObtenido"
+        } else {
+            Toast.makeText(this, "Los horarios de oficina son de 9 a 17 horas", Toast.LENGTH_LONG).show()
+        }
+
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         diaObtenido = dayOfMonth
-        mesObtenido = month
+        mesObtenido = month + 1
         añoObtenido = year
+
         tvFeSe?.setText("$diaObtenido/$mesObtenido/$añoObtenido")
 
         //Se obtiene la fecha para enviar al insert
@@ -161,30 +169,47 @@ class NuevaCita : AppCompatActivity(), TimePickerDialog.OnTimeSetListener, DateP
 
     fun clickCrearCita(view: View){
         if (verificarVacio()){
-            val url = "$servidor/API_SGTEQ/insertar_cita.php"
             val queue = Volley.newRequestQueue(this)
-            var resultadoPost = object : StringRequest(Request.Method.POST, url,
-                Response.Listener <String> { response ->
-                    Toast.makeText(this, "Cita registrada exitosamente", Toast.LENGTH_LONG).show()
-                }, Response.ErrorListener { error ->
-                    Toast.makeText(this, "Error: $error", Toast.LENGTH_LONG).show()
-                }){
-                override fun getParams(): MutableMap<String, String> {
-                    val parametros = HashMap<String, String>()
-                    parametros.put("nombre", tramite)
-                    parametros.put("fecha_cita", fechacons)
-                    parametros.put("hora_cita", horacons)
-                    parametros.put("lugar", lugar)
-                    parametros.put("estatus","Pendiente")
-                    parametros.put("persona_id", id)
-                    return parametros
+            val url = "$servidor/API_SGTEQ/consultar_hora.php?hora=${horacons}&fecha=${fechacons}"
+
+            val jsonObjectRequest = JsonObjectRequest(
+                Request.Method.GET, url, null,
+                { response ->
+                    idcita = response.getString("id").toString()
+                    if (idcita.isNotEmpty())
+                        Toast.makeText(this, "El horario seleccionado está ocupado, seleccione uno diferente", Toast.LENGTH_LONG).show()
+                }, { error ->
+                    insertarCita()
+                    //Toast.makeText(this, "Error: $error", Toast.LENGTH_LONG).show()
                 }
-            }
-            queue.add(resultadoPost)
-            finish()
+            )
+            queue.add(jsonObjectRequest)
         }else
             Toast.makeText(this, "Rellene todos los campos", Toast.LENGTH_LONG).show()
+    }
 
+    fun insertarCita(){
+        val url = "$servidor/API_SGTEQ/insertar_cita.php"
+        val queue = Volley.newRequestQueue(this)
+        var resultadoPost = object : StringRequest(Request.Method.POST, url,
+            Response.Listener <String> { response ->
+                Toast.makeText(this, "Cita registrada exitosamente", Toast.LENGTH_LONG).show()
+            }, Response.ErrorListener { error ->
+                Toast.makeText(this, "Error: $error", Toast.LENGTH_LONG).show()
+            }){
+            override fun getParams(): MutableMap<String, String> {
+                val parametros = HashMap<String, String>()
+                parametros.put("nombre", tramite)
+                parametros.put("fecha_cita", fechacons)
+                parametros.put("hora_cita", horacons)
+                parametros.put("lugar", lugar)
+                parametros.put("estatus","Pendiente")
+                parametros.put("persona_id", id)
+                return parametros
+            }
+        }
+        queue.add(resultadoPost)
+        finish()
     }
 
 }
